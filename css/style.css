@@ -1,0 +1,192 @@
+:root {
+    --width: 20px;
+}
+
+body {
+    font-family: "Truculenta", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 100;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+}
+
+/* Global Styles */
+
+* {
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+}
+
+h1 {
+    margin: 0;
+}
+
+.btn {
+    background-color: rgba(92, 113, 94, .8);
+    color: #fff;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-family: "Truculenta", sans-serif;
+    font-size: 1.25rem;
+    font-weight: normal;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn:hover {
+    background-color: rgba(92, 113, 94, 1);
+}
+
+/* Index Page Styles */
+.page-wrapper {
+    background: #f2f9f1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.page-wrapper .start-info {
+    text-align: center;
+    background: #b6cdbd;
+    padding: 3rem;
+    border-radius: 1rem;
+}
+
+.page-wrapper .start-info p {
+    font-size: 1.25rem;
+}
+
+/* Game Page Styles */
+.game-wrapper {
+    background-color: rgb(199, 209, 200);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.game-wrapper .score {
+    background-color: #080001;
+    color: #ffffff;
+    text-align: center;
+    font-family: monospace;
+    padding: .5rem 1rem;
+}
+
+.game-wrapper .score h2 {
+    margin: 0;
+}
+
+.game-wrapper #board {
+    position: relative;
+    margin: 0 auto;
+    background-color: #fff;
+    /* background-image:
+        linear-gradient(to right, #555 1px, transparent 1px),
+        linear-gradient(to top, #555 1px, transparent 1px); */
+    background-size: var(--width) var(--width);
+}
+
+.game-wrapper #board .snake-part {
+    transition: transform 3s ease;
+    background: transparent url("../images/train-body.png") no-repeat top center;
+    background-size: contain;
+}
+
+.game-wrapper #board .snake-part.head {
+    background: transparent url("../images/train-head.png") no-repeat top center;
+    background-size: contain;
+}
+
+.game-wrapper #board .snake-part.tail {
+    background: transparent url("../images/train-tail.png") no-repeat top center;
+    background-size: contain;
+}
+
+.game-wrapper #board #player {
+    position: absolute;
+    background: #000;
+}
+
+.game-wrapper #board .obstacle {
+    background-color: red !important;
+    border: 2px solid white;
+}
+
+.game-wrapper #board .obstacle.static {
+    background-color: blue;
+}
+
+.game-wrapper #board .prize {
+    position: absolute;
+    background: green;
+    width: var(--width);
+    height: var(--width);
+    border-radius: 100%;
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.7);
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Game Over Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    font-family: sans-serif;
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+}
+
+.modal-content button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
