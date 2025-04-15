@@ -79,7 +79,16 @@ h1 {
     gap: 1rem;
 }
 
-.game-wrapper .score {
+.game-wrapper .game-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 600px;
+    margin: 0 auto;
+}
+
+.game-wrapper .tools {
     background-color: #080001;
     color: #ffffff;
     text-align: center;
@@ -87,10 +96,11 @@ h1 {
     padding: .5rem 1rem;
 }
 
-.game-wrapper .score h2 {
+.game-wrapper .tools h2 {
     margin: 0;
 }
 
+/* Game Board Styles */
 .game-wrapper #board {
     position: relative;
     margin: 0 auto;
@@ -101,27 +111,27 @@ h1 {
     background-size: var(--width) var(--width);
 }
 
-.game-wrapper #board .snake-part {
+/* Game Player Styles */
+.game-wrapper #board .body-part {
+    position: absolute;
+    width: var(--width);
+    height: var(--width);
     transition: transform 3s ease;
     background: transparent url("../images/train-body.png") no-repeat top center;
     background-size: contain;
 }
 
-.game-wrapper #board .snake-part.head {
+.game-wrapper #board .body-part.head {
     background: transparent url("../images/train-head.png") no-repeat top center;
     background-size: contain;
 }
 
-.game-wrapper #board .snake-part.tail {
+.game-wrapper #board .body-part.tail {
     background: transparent url("../images/train-tail.png") no-repeat top center;
     background-size: contain;
 }
 
-.game-wrapper #board #player {
-    position: absolute;
-    background: #000;
-}
-
+/* Game Obstacles Styles */
 .game-wrapper #board .obstacle {
     background-color: red !important;
     border: 2px solid white;

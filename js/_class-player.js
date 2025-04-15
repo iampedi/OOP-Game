@@ -1,6 +1,5 @@
 export class Player {
   constructor(board) {
-    this.board = board;
     this.boardWidth = board.width;
     this.boardHeight = board.height;
     this.width = board.cellSize;
@@ -13,7 +12,8 @@ export class Player {
 
     const centerX =
       Math.floor(this.boardWidth / 2 / this.moveSize) * this.moveSize;
-    const bottomY = 0;
+    const bottomY =
+      Math.floor(this.boardWidth / 2 / this.moveSize) * this.moveSize;
 
     this.body = [
       { x: centerX, y: bottomY }, // End of body
@@ -107,15 +107,16 @@ export class Player {
         break;
     }
 
-    if (!this.isInsideBoard(head)) {
-      this.board.handleGameOver();
-      return;
-    }
-
     this.body.push(head);
     this.body.shift();
 
+    // if (this.grow) {
+    //   this.grow = false;
+    // } else {
+    //   this.body.shift();
+    // }
     this.render();
+    return head;
   }
 
   isInsideBoard(position) {
@@ -127,14 +128,36 @@ export class Player {
     );
   }
 
-  checkCollisions(position) {
-    const bodyWithoutHead = this.body.slice(0, -1);
-    if (
-      bodyWithoutHead.some(
-        (segment) => segment.x === position.x && segment.y === position.y
-      )
-    ) {
-      this.board.handleGameOver();
+  hasCollision(position) {
+    return this.body.some(
+      (segment) => segment.x === position.x && segment.y === position.y
+    );
+  }
+
+  // hasHitObstacle(obstacles) {
+  //   const head = this.body[this.body.length - 1];
+  //   return obstacles.some((ob) => ob.isEatenBy(head));
+  // }
+
+  // handlePrizeCollision(prize) {
+  //   const head = this.body[this.body.length - 1];
+
+  //   if (prize.isEatenBy(head)) {
+  //     this.growNextStep();
+  //     prize.remove();
+  //     return true; // ← یعنی برخورد کرده
+  //   }
+
+  //   return false; // ← برخوردی نبود
+  // }
+
+  // growNextStep() {
+  //   this.grow = true;
+  // }
+
+  handleGameOver(position) {
+    if (!this.isInsideBoard(position)) {
+      window.gameOver = true;
       return true;
     }
 

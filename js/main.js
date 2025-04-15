@@ -1,77 +1,61 @@
 import { Board } from "./class-board.js";
 import { Player } from "./class-player.js";
-import { Prize } from "./class-prize.js";
-import { Obstacle } from "./class-obstacle.js";
 
-// 🔹 وضعیت بازی
+// Game Status
 window.gameOver = false;
-let score = 0;
-let obstacles = [];
-let speed = 200;
+window.paused = false;
 
-function getSpeedByScore(score) {
-  return Math.max(80, 200 - score * 5);
-}
+let currentSpeed = 200;
 
-// 🔹 ساخت بورد و بازیکن
-const board = new Board();
-const player = new Player(board);
-const prize = new Prize(board);
-player.obstacles = obstacles;
+// Game Objects
+const board = new Board(gameLoop, startGame);
+let player;
 
-// 🔹 شروع بازی
 startGame();
 
 function startGame() {
-  board.create();
+  player = new Player(board);
   player.render();
-  prize.create(player.body, obstacles);
-  gameLoop(); // شروع بازی
+  // prize.create(player.body, obstacles);
+  gameLoop();
 }
 
-function updateScore() {
-  document.getElementById("score").textContent = score;
-}
-
-function updateSpeedDisplay(currentSpeed) {
-  document.getElementById("speed").textContent = currentSpeed + " ms";
-}
-
+// Game Loop
 function gameLoop() {
-  if (window.gameOver) return;
+  if (window.gameOver || window.paused) return;
 
   player.move();
-
   const head = player.body[player.body.length - 1];
 
-  if (player.handlePrizeCollision(prize)) {
-    score++;
-    updateScore();
-    prize.create(player.body, obstacles);
+  if (player.checkCollisions(head)) return;
 
-    if (score % 3 === 0) {
-      const newObstacle = new Obstacle(board);
-      newObstacle.create(player.body, prize.position);
-      obstacles.push(newObstacle);
-      player.obstacles = obstacles;
-    }
+  if (!window.gameOver) {
+    setTimeout(gameLoop, currentSpeed);
   }
-
-  if (player.hasHitObstacle(obstacles)) {
-    return;
-  }
-
-  // 🔁 اجرای حلقه بعدی با سرعت جدید
-  const currentSpeed = getSpeedByScore(score);
-  updateSpeedDisplay(currentSpeed);
-  setTimeout(gameLoop, currentSpeed);
 }
 
+// Control Player's Direction
 document.addEventListener("keydown", (event) => {
-  if (window.gameOver) return;
+  if (window.gameOver || window.paused) return;
 
   if (event.key === "ArrowUp") player.setDirection("up");
   else if (event.key === "ArrowRight") player.setDirection("right");
   else if (event.key === "ArrowDown") player.setDirection("down");
   else if (event.key === "ArrowLeft") player.setDirection("left");
 });
+
+// Pause Game
+if (board.pauseElm) {
+  board.pauseElm.addEventListener("click", () => board.handlePause());
+
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      board.handlePause();
+    }
+  });
+}
+
+// Restart Game
+document
+  .getElementById("restart-btn")
+  .addEventListener("click", () => board.handleRestart());

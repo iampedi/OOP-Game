@@ -6,8 +6,12 @@ export class Obstacle {
     this.rows = Math.floor(this.boardElm.clientHeight / this.size);
   }
 
-  create(playerBody, prizePosition) {
-    const available = this.getAvailablePositions(playerBody, prizePosition);
+  create(playerBody, prizePosition, existingObstacles = []) {
+    const available = this.getAvailablePositions(
+      playerBody,
+      prizePosition,
+      existingObstacles
+    );
     if (available.length === 0) return;
 
     const index = Math.floor(Math.random() * available.length);
@@ -16,6 +20,7 @@ export class Obstacle {
     const obstacleElm = document.createElement("div");
     obstacleElm.className = "obstacle";
 
+    // Styling (can be moved to CSS)
     obstacleElm.style.width = this.size + "px";
     obstacleElm.style.height = this.size + "px";
     obstacleElm.style.position = "absolute";
@@ -29,7 +34,7 @@ export class Obstacle {
     this.obstacleElm = obstacleElm;
   }
 
-  getAvailablePositions(playerBody, prizePosition) {
+  getAvailablePositions(playerBody, prizePosition, existingObstacles = []) {
     const available = [];
 
     for (let x = 0; x < this.cols; x++) {
@@ -45,7 +50,14 @@ export class Obstacle {
           prizePosition.x === cell.x &&
           prizePosition.y === cell.y;
 
-        if (!occupiedByPlayer && !occupiedByPrize) {
+        const occupiedByObstacle = existingObstacles.some(
+          (obs) =>
+            obs.position &&
+            obs.position.x === cell.x &&
+            obs.position.y === cell.y
+        );
+
+        if (!occupiedByPlayer && !occupiedByPrize && !occupiedByObstacle) {
           available.push(cell);
         }
       }
@@ -58,5 +70,11 @@ export class Obstacle {
     return (
       this.position && head.x === this.position.x && head.y === this.position.y
     );
+  }
+
+  remove() {
+    if (this.obstacleElm && this.obstacleElm.parentElement) {
+      this.obstacleElm.parentElement.removeChild(this.obstacleElm);
+    }
   }
 }
