@@ -1,40 +1,14 @@
 export class Obstacle {
-  constructor(board) {
+  constructor(board, playerBody, prize, existingObstacles = []) {
+    this.boardElm = board.boardElm;
     this.size = board.cellSize;
-    this.boardElm = document.querySelector("#board");
-    this.cols = Math.floor(this.boardElm.clientWidth / this.size);
-    this.rows = Math.floor(this.boardElm.clientHeight / this.size);
+    this.cols = Math.floor(board.width / this.size);
+    this.rows = Math.floor(board.height / this.size);
+    this.element = null;
+    this.create(playerBody, prize, existingObstacles);
   }
 
-  create(playerBody, prizePosition, existingObstacles = []) {
-    const available = this.getAvailablePositions(
-      playerBody,
-      prizePosition,
-      existingObstacles
-    );
-    if (available.length === 0) return;
-
-    const index = Math.floor(Math.random() * available.length);
-    const { x, y } = available[index];
-
-    const obstacleElm = document.createElement("div");
-    obstacleElm.className = "obstacle";
-
-    // Styling (can be moved to CSS)
-    obstacleElm.style.width = this.size + "px";
-    obstacleElm.style.height = this.size + "px";
-    obstacleElm.style.position = "absolute";
-    obstacleElm.style.left = x + "px";
-    obstacleElm.style.bottom = y + "px";
-    obstacleElm.style.backgroundColor = "black";
-    obstacleElm.style.borderRadius = "4px";
-
-    this.boardElm.appendChild(obstacleElm);
-    this.position = { x, y };
-    this.obstacleElm = obstacleElm;
-  }
-
-  getAvailablePositions(playerBody, prizePosition, existingObstacles = []) {
+  getAvailablePositions(playerBody, prize, existingObstacles) {
     const available = [];
 
     for (let x = 0; x < this.cols; x++) {
@@ -42,22 +16,21 @@ export class Obstacle {
         const cell = { x: x * this.size, y: y * this.size };
 
         const occupiedByPlayer = playerBody.some(
-          (segment) => segment.x === cell.x && segment.y === cell.y
+          (part) => part.x === cell.x && part.y === cell.y
         );
 
         const occupiedByPrize =
-          prizePosition &&
-          prizePosition.x === cell.x &&
-          prizePosition.y === cell.y;
+          prize &&
+          prize.position &&
+          prize.position.x === cell.x &&
+          prize.position.y === cell.y;
 
-        const occupiedByObstacle = existingObstacles.some(
-          (obs) =>
-            obs.position &&
-            obs.position.x === cell.x &&
-            obs.position.y === cell.y
+        const occupiedByOtherObstacle = existingObstacles.some(
+          (ob) =>
+            ob.position && ob.position.x === cell.x && ob.position.y === cell.y
         );
 
-        if (!occupiedByPlayer && !occupiedByPrize && !occupiedByObstacle) {
+        if (!occupiedByPlayer && !occupiedByPrize && !occupiedByOtherObstacle) {
           available.push(cell);
         }
       }
@@ -66,15 +39,31 @@ export class Obstacle {
     return available;
   }
 
-  isEatenBy(head) {
-    return (
-      this.position && head.x === this.position.x && head.y === this.position.y
+  create(playerBody, prize, existingObstacles) {
+    const available = this.getAvailablePositions(
+      playerBody,
+      prize,
+      existingObstacles
     );
+    if (available.length === 0) return;
+
+    const index = Math.floor(Math.random() * available.length);
+    const { x, y } = available[index];
+
+    this.element = document.createElement("div");
+    this.element.className = "obstacle";
+    this.element.style.left = `${x}px`;
+    this.element.style.bottom = `${y}px`;
+
+    this.position = { x, y };
+
+    this.boardElm.appendChild(this.element);
   }
 
   remove() {
-    if (this.obstacleElm && this.obstacleElm.parentElement) {
-      this.obstacleElm.parentElement.removeChild(this.obstacleElm);
+    if (this.element) {
+      this.element.remove();
+      this.element = null;
     }
   }
 }

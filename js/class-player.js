@@ -107,13 +107,35 @@ export class Player {
         break;
     }
 
+    // بررسی خروج از بورد
     if (!this.isInsideBoard(head)) {
       this.board.handleGameOver();
       return;
     }
 
+    // بررسی برخورد با خود یا مانع
+    const bodyWithoutHead = this.body.slice(0, -1);
+
+    const hitSelf = bodyWithoutHead.some(
+      (segment) => segment.x === head.x && segment.y === head.y
+    );
+
+    const hitObstacle = window.obstacles?.some(
+      (ob) => ob.position?.x === head.x && ob.position?.y === head.y
+    );
+
+    if (hitSelf || hitObstacle) {
+      this.board.handleGameOver();
+      return;
+    }
+
+    // حرکت واقعی
     this.body.push(head);
-    this.body.shift();
+    if (!this.grow) {
+      this.body.shift();
+    } else {
+      this.grow = false;
+    }
 
     this.render();
   }
@@ -134,6 +156,16 @@ export class Player {
         (segment) => segment.x === position.x && segment.y === position.y
       )
     ) {
+      this.board.handleGameOver();
+      return true;
+    }
+
+    if (
+      window.obstacles?.some(
+        (ob) => ob.position?.x === position.x && ob.position?.y === position.y
+      )
+    ) {
+      console.log("💥 برخورد با مانع");
       this.board.handleGameOver();
       return true;
     }

@@ -1,31 +1,9 @@
 export class Prize {
-  constructor(board, count = 1) {
-    this.count = count;
+  constructor(board) {
+    this.boardElm = board.boardElm;
     this.size = board.cellSize;
-    this.boardElm = document.querySelector("#board");
     this.cols = Math.floor(this.boardElm.clientWidth / this.size);
     this.rows = Math.floor(this.boardElm.clientHeight / this.size);
-  }
-
-  create(playerBody, obstacles = []) {
-    const available = this.getAvailablePositions(playerBody, obstacles);
-    if (available.length === 0) return;
-
-    const index = Math.floor(Math.random() * available.length);
-    const { x, y } = available[index];
-
-    this.prizeElm = document.createElement("div");
-    this.prizeElm.className = "prize";
-
-    this.prizeElm.style.width = this.size + "px";
-    this.prizeElm.style.height = this.size + "px";
-    this.prizeElm.style.position = "absolute";
-    this.prizeElm.style.left = x + "px";
-    this.prizeElm.style.bottom = y + "px";
-
-    this.boardElm.appendChild(this.prizeElm);
-
-    this.position = { x, y };
   }
 
   getAvailablePositions(playerBody, obstacles = []) {
@@ -53,10 +31,22 @@ export class Prize {
     return available;
   }
 
-  isEatenBy(head) {
-    return (
-      this.position && head.x === this.position.x && head.y === this.position.y
-    );
+  create(playerBody, obstacles = []) {
+    const available = this.getAvailablePositions(playerBody, obstacles);
+    if (available.length === 0) return;
+
+    const index = Math.floor(Math.random() * available.length);
+    const { x, y } = available[index];
+
+    this.prizeElm = document.createElement("div");
+    this.prizeElm.className = "prize";
+
+    this.prizeElm.style.left = x + "px";
+    this.prizeElm.style.bottom = y + "px";
+
+    this.boardElm.appendChild(this.prizeElm);
+
+    this.position = { x, y };
   }
 
   remove() {
