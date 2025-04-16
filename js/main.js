@@ -15,11 +15,11 @@ let prize;
 let score = 0;
 let level = 1;
 
-let currentSpeed = 200;
+let currentSpeed = 0;
 const minSpeed = 50;
 const speedStep = 10;
 
-const pointsPerObstacle = 30;
+const pointsPerObstacle = 20;
 
 let bulletStock = 0;
 const maxBullets = 5;
@@ -33,19 +33,17 @@ startGame();
 function startGame() {
   player = new Player(board);
 
-  if (prize) {
-    prize.remove();
-  }
+  if (prize) prize.remove();
 
   prize = new Prize(board);
-  prize.create(player.body);
+  prize.create(player.body, window.obstacles);
 
   window.obstacles.forEach((ob) => ob.remove());
   window.obstacles = [];
 
   score = 0;
   level = 1;
-  currentSpeed = 200;
+  currentSpeed = 160;
 
   document.getElementById("score").textContent = score;
   document.getElementById("level").textContent = level;
@@ -72,7 +70,7 @@ function gameLoop() {
     document.getElementById("score").textContent = score;
 
     prize.remove();
-    prize.create(player.body);
+    prize.create(player.body, window.obstacles);
 
     if (score >= level * pointsPerLevel) {
       level++;
@@ -125,15 +123,12 @@ document.addEventListener("keydown", (event) => {
 });
 
 // Pause Game
-if (board.pauseElm) {
-  board.pauseElm.addEventListener("click", () => board.handlePause());
-
-  window.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      board.handlePause();
-    }
-  });
-}
+window.addEventListener("keydown", (event) => {
+  if (window.gameOver) return;
+  if (event.key === "Escape") {
+    board.handlePause();
+  }
+});
 
 // Restart Game
 document

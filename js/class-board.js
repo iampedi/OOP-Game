@@ -1,12 +1,12 @@
 export class Board {
-  constructor(gameLoop, startGame, width = 600) {
+  constructor(gameLoop, startGame, width = 576) {
     this.width = width;
     this.height = this.width;
     this.gameLoop = gameLoop;
     this.startGame = startGame;
-    this.cellSize = this.width / 30;
+    this.cellSize = this.width / 24;
     this.boardElm = document.querySelector("#board");
-    this.pauseElm = document.querySelector("#pause-btn");
+    this.pauseElm = document.querySelector("#pause");
 
     this.create();
   }
@@ -18,11 +18,11 @@ export class Board {
   handlePause() {
     if (window.paused) {
       window.paused = false;
-      this.pauseElm.textContent = "Pause (Esc)";
+      this.pauseElm.textContent = "Pause";
       this.gameLoop();
     } else {
       window.paused = true;
-      this.pauseElm.textContent = "Resume (Esc)";
+      this.pauseElm.textContent = "Resume";
     }
   }
 

@@ -1,5 +1,5 @@
 :root {
-    --width: 20px;
+    --width: 24px;
 }
 
 body {
@@ -17,7 +17,7 @@ body {
 /* Global Styles */
 
 * {
-    box-sizing: border-box;
+    /* box-sizing: border-box; */
 }
 
 a {
@@ -68,7 +68,8 @@ h1 {
 
 /* Game Page Styles */
 .game-wrapper {
-    background-color: rgb(199, 209, 200);
+    /* background: url("../images/bg-main.webp") no-repeat center center/contain; */
+    background-color: #74b82f;
     height: 100vh;
     display: flex;
     align-items: center;
@@ -89,7 +90,6 @@ h1 {
 }
 
 .game-wrapper .tools {
-    background-color: #080001;
     color: #ffffff;
     text-align: center;
     font-family: monospace;
@@ -104,10 +104,12 @@ h1 {
 .game-wrapper #board {
     position: relative;
     margin: 0 auto;
-    background-color: #fff;
-    /* background-image:
-        linear-gradient(to right, #555 1px, transparent 1px),
-        linear-gradient(to top, #555 1px, transparent 1px); */
+    background-color: #c5d1b8;
+    border: 12px solid #644b2a;
+    box-shadow: inset 0 0 10px #644b2a;
+    background-image:
+        linear-gradient(to right, #b9b9b9 1px, transparent 1px),
+        linear-gradient(to bottom, #b9b9b9 1px, transparent 1px);
     background-size: var(--width) var(--width);
 }
 
@@ -133,7 +135,7 @@ h1 {
 
 /* Game Obstacles Styles */
 .game-wrapper #board .obstacle {
-    background-color: red !important;
+    background: url("../images/obstacle.png") no-repeat center center;
     position: absolute;
     width: var(--width);
     height: var(--width);
@@ -145,27 +147,23 @@ h1 {
 
 .game-wrapper #board .prize {
     position: absolute;
-    background: green;
+    background: url("../images/prize.png") no-repeat center center / cover;
     width: var(--width);
     height: var(--width);
     border-radius: 100%;
-    box-shadow: 0 0 5px rgba(255, 215, 0, 0.7);
-    animation: pulse 1s infinite;
+    animation: rotate 1s linear infinite;
 }
 
-@keyframes pulse {
+@keyframes rotate {
     0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.2);
+        transform: rotate(0deg);
     }
 
     100% {
-        transform: scale(1);
+        transform: rotate(360deg);
     }
 }
+
 
 /* Game Over Modal Styles */
 .modal {
@@ -211,5 +209,4 @@ h1 {
     background-color: yellow;
     border-radius: 50%;
     z-index: 10;
-  }
-  
+}
