@@ -19,14 +19,18 @@ let currentSpeed = 0;
 const minSpeed = 50;
 const speedStep = 10;
 
-const pointsPerObstacle = 20;
+const pointsPerObstacle = 10;
 
 let bulletStock = 0;
 const maxBullets = 5;
 
+let backgroundMusic = new Audio("./files/game-play.mp3");
+backgroundMusic.loop = true;
+backgroundMusic.volume = 0.2;
+
 const pointsPerPrize = 10;
 const pointsPerLevel = 50;
-const board = new Board(gameLoop, startGame);
+const board = new Board(gameLoop, startGame, backgroundMusic);
 
 startGame();
 
@@ -49,9 +53,12 @@ function startGame() {
   document.getElementById("level").textContent = level;
 
   bulletStock = 0;
-  document.getElementById("bullets").textContent = bulletStock;
+  updateBullets(bulletStock);
 
   player.render();
+
+  backgroundMusic.currentTime = 0;
+  backgroundMusic.play();
   gameLoop();
 }
 
@@ -72,6 +79,10 @@ function gameLoop() {
     prize.remove();
     prize.create(player.body, window.obstacles);
 
+    const audioPrize = new Audio("./files/prize.mp3");
+    audioPrize.volume = 0.2;
+    audioPrize.play();
+
     if (score >= level * pointsPerLevel) {
       level++;
       document.getElementById("level").textContent = level;
@@ -80,9 +91,9 @@ function gameLoop() {
 
       player.grow = true;
 
-      if (level >= 4 && bulletStock < maxBullets) {
+      if (level >= 3 && bulletStock < maxBullets) {
         bulletStock++;
-        document.getElementById("bullets").textContent = bulletStock; // 👈 این خط
+        updateBullets(bulletStock);
       }
     }
 
@@ -115,9 +126,31 @@ document.addEventListener("keydown", (event) => {
   else if (event.key === " ") {
     if (level >= 3 && bulletStock > 0) {
       const head = player.body[player.body.length - 1];
-      new Bullet(board, head, player.direction);
-      bulletStock--; // مصرف گلوله
-      document.getElementById("bullets").textContent = bulletStock;
+      const startPos = { x: head.x, y: head.y };
+
+      // Shoot Bullet according to Player's Direction
+      switch (player.direction) {
+        case "up":
+          startPos.y += player.moveSize;
+          break;
+        case "down":
+          startPos.y -= player.moveSize;
+          break;
+        case "left":
+          startPos.x -= player.moveSize;
+          break;
+        case "right":
+          startPos.x += player.moveSize;
+          break;
+      }
+
+      new Bullet(board, startPos, player.direction);
+
+      const audio = new Audio("./files/shoot.mp3");
+      audio.play();
+
+      bulletStock--;
+      updateBullets(bulletStock);
     }
   }
 });
@@ -134,3 +167,19 @@ window.addEventListener("keydown", (event) => {
 document
   .getElementById("restart-btn")
   .addEventListener("click", () => board.handleRestart());
+
+// Update Bullet
+function updateBullets(bullet) {
+  const bulletsContainer = document.getElementById("bullets");
+  const spans = bulletsContainer.querySelectorAll("span img");
+
+  spans.forEach((img, index) => {
+    if (index < bullet) {
+      img.src = "./images/bullet.png";
+      img.style.opacity = 1;
+    } else {
+      img.src = "./images/bullet-gray.png";
+      img.style.opacity = 0.5;
+    }
+  });
+}

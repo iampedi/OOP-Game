@@ -12,15 +12,21 @@
 <body>
     <div class="game-wrapper">
         <div class="game-info">
-            <div class="tools">
-                <h2>Score: <span id="score">0</span></h2>
-                <h2>Level: <span id="level">1</span></h2>
-                <h2>Bullets: <span id="bullets">0</span></h2>
+            <h1>Bullet Train</h1>
+            <div class="score-level">
+                <h2 class="numbers"><img src="./images/prize.png" /><span id="score">0</span></h2>
+                <div id="bullets">
+                    <span><img src="./images/bullet-gray.png" /></span>
+                    <span><img src="./images/bullet-gray.png" /></span>
+                    <span><img src="./images/bullet-gray.png" /></span>
+                    <span><img src="./images/bullet-gray.png" /></span>
+                    <span><img src="./images/bullet-gray.png" /></span>
+                </div>
+                <h2 class="numbers right"><span id="level"></span><img src="./images/level.png" /></h2>
             </div>
-            <div>
-                <p>To <span id="pause">Pause</span> press (Esc) Key!</p>
+            <div class="status">
+                <p id="pause">Press the (Esc) Key to <span>PAUSE</span>!</p>
             </div>
-
         </div>
 
         <div id="board">
@@ -30,8 +36,10 @@
 
     <div id="game-over-modal" class="modal hidden">
         <div class="modal-content">
-            <h2>💥 Game Over</h2>
-            <button id="restart-btn" class="btn">🔁 Try Again</button>
+            <img src="./images/game-over.png">
+            <h2>Your train took the wrong track...</h2>
+            <p>Better luck next ride!</p>
+            <button id="restart-btn" class="btn">Restart</button>
         </div>
     </div>
 

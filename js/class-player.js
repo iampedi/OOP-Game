@@ -113,7 +113,7 @@ export class Player {
       return;
     }
 
-    // بررسی برخورد با خود یا مانع
+    // Check Collisions
     const bodyWithoutHead = this.body.slice(0, -1);
 
     const hitSelf = bodyWithoutHead.some(
@@ -129,7 +129,7 @@ export class Player {
       return;
     }
 
-    // حرکت واقعی
+    // Update Body
     this.body.push(head);
     if (!this.grow) {
       this.body.shift();
@@ -165,7 +165,6 @@ export class Player {
         (ob) => ob.position?.x === position.x && ob.position?.y === position.y
       )
     ) {
-      console.log("💥 برخورد با مانع");
       this.board.handleGameOver();
       return true;
     }
